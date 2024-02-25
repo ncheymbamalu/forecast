@@ -39,7 +39,9 @@ def create_lag_features(data: pd.DataFrame, target_name: str) -> pd.DataFrame:
         raise e
 
 
-def create_window_features(data: pd.DataFrame, target_name: str, max_window_size: int = 24) -> pd.DataFrame:
+def create_window_features(
+    data: pd.DataFrame, target_name: str, max_window_size: int = 24
+) -> pd.DataFrame:
     """Creates a matrix of window features from a univariate time series
 
     Args:
@@ -63,7 +65,10 @@ def create_window_features(data: pd.DataFrame, target_name: str, max_window_size
             .tolist()
         )
         dfs: List[pd.DataFrame] = [
-            data[target_name].rolling(window=window_size, min_periods=1).agg(["mean", "std"]).shift(periods=1)
+            data[target_name]
+            .rolling(window=window_size, min_periods=1)
+            .agg(["mean", "std"])
+            .shift(periods=1)
             for window_size in reversed(range(4, max_window_size + 1, 4))
         ]
         df: pd.DataFrame = pd.concat(dfs, axis=1).dropna()
@@ -87,10 +92,12 @@ def create_datetime_features(data: pd.DataFrame) -> pd.DataFrame:
         df = df.assign(
             hour=df.index.hour,
             time_of_day=[
-                1 if x in range(5, 12) 
-                else 2 if x in range(12, 17) 
-                else 3 if x in range(17, 21) 
-                else 4 for x in df.index.hour
+                (
+                    1
+                    if x in range(5, 12)
+                    else 2 if x in range(12, 17) else 3 if x in range(17, 21) else 4
+                )
+                for x in df.index.hour
             ],
         )
         return df
@@ -98,7 +105,9 @@ def create_datetime_features(data: pd.DataFrame) -> pd.DataFrame:
         raise e
 
 
-def transform_data(stationary_data: pd.DataFrame, target_name: str) -> Tuple[pd.DataFrame, pd.Series]:
+def transform_data(
+    stationary_data: pd.DataFrame, target_name: str
+) -> Tuple[pd.DataFrame, pd.Series]:
     """Transforms a stationary univariate time series to a matrix of lag
     features, window features, datetime features, and a target
 

@@ -62,7 +62,9 @@ def train_model(
         containing the most informative features
     """
     try:
-        logging.info("Initiating %s and %s...", "time series cross-validation", "hyperparameter tuning")
+        logging.info(
+            "Initiating %s and %s...", "time series cross-validation", "hyperparameter tuning"
+        )
         config = OmegaConf.load(r"./config.yaml")
         train_indices: List[int] = [
             feature_matrix.shape[0] + (i * forecast_horizon) for i in range(-10, 0)
@@ -72,9 +74,7 @@ def train_model(
             idx_pair for idx_pair in zip(train_indices, val_indices) if idx_pair[0] > 0
         ]
         n_folds: int = len(idx_pairs)
-        tss: TimeSeriesSplit = TimeSeriesSplit(
-            n_splits=n_folds, test_size=forecast_horizon, gap=0
-        )
+        tss: TimeSeriesSplit = TimeSeriesSplit(n_splits=n_folds, test_size=forecast_horizon, gap=0)
         search_space: Dict[str, List[Union[int, float]]] = {
             "n_estimators": config.train.n_estimators,
             "max_depth": config.train.max_depth,

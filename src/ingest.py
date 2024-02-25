@@ -67,7 +67,7 @@ def preprocess_data(start: str) -> pd.DataFrame:
 
 
 def ensure_stationarity(
-        data: pd.DataFrame, target_name: str = "energy_consumption_mw"
+    data: pd.DataFrame, target_name: str = "energy_consumption_mw"
 ) -> Tuple[pd.DataFrame, str]:
     """Returns a DataFrame that contains a stationary univariate time series
 
@@ -84,8 +84,8 @@ def ensure_stationarity(
         df: pd.DataFrame = (
             data.dropna()
             .assign(
-                prev=data[target_name].dropna().shift(periods=1), 
-                diff=data[target_name].dropna().diff(periods=1)
+                prev=data[target_name].dropna().shift(periods=1),
+                diff=data[target_name].dropna().diff(periods=1),
             )
             .copy(deep=True)
         )

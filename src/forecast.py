@@ -34,7 +34,7 @@ def get_recursive_forecast(
         datetime features
         target_vector (pd.Series): Post-transformation stationary univariate time series
         model (XGBRegressor): Object of type, 'XGBRegressor'
-        mi_features (List[str]): List containing the most informative features based 
+        mi_features (List[str]): List containing the most informative features based
         on the mutual information criterion
 
     Returns:
@@ -55,8 +55,8 @@ def get_recursive_forecast(
 
         # extract the 'relevant' datetime features
         dt_cols: List[str] = [
-            col 
-            for col in feature_matrix.columns 
+            col
+            for col in feature_matrix.columns
             if (col in mi_features) and (col not in lag_cols + window_cols)
         ]
 
@@ -68,9 +68,9 @@ def get_recursive_forecast(
 
         # create a list of lists, ...
         # where each list is a row of values for the out-of-sample datetime features
-        x_dts: List[List[int]] = (
-            create_datetime_features(pd.DataFrame(index=forecast_indices))[dt_cols].values.tolist()
-        )
+        x_dts: List[List[int]] = create_datetime_features(pd.DataFrame(index=forecast_indices))[
+            dt_cols
+        ].values.tolist()
 
         # create a list of window sizes, ...
         # which will be used to compute values for the out-of-sample window features
@@ -131,5 +131,7 @@ if __name__ == "__main__":
     df_stationary, target = preprocess_data(initial_timestamp).pipe(ensure_stationarity)
     x_matrix, y_vector = transform_data(df_stationary, target)
     reg, features = train_model(x_matrix, y_vector)
-    recursive_forecast: pd.Series = get_recursive_forecast(df_stationary, x_matrix, y_vector, reg, features)
+    recursive_forecast: pd.Series = get_recursive_forecast(
+        df_stationary, x_matrix, y_vector, reg, features
+    )
     print(recursive_forecast)
