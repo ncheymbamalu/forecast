@@ -1,2 +1,20 @@
 ingest: 
   raw_data_path: ./data/PJME_hourly.csv
+
+train:
+  n_estimators:
+    - 100
+    - 200
+    - 500
+  max_depth: 
+    - 3
+    - 6
+    - 15
+  learning_rate:
+    - 0.1
+    - 0.3
+    - 0.5
+  gamma:
+    - 0
+    - 0.1
+    - 1
