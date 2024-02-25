@@ -1,0 +1,10 @@
+* 
+.*env
+
+!README.md
+!app.py
+!config.yaml
+!data
+!poetry.lock
+!pyproject.toml
+!src
