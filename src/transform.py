@@ -4,8 +4,6 @@ Data transformation
 
 import random
 
-from typing import List, Tuple
-
 import numpy as np
 import pandas as pd
 
@@ -28,10 +26,10 @@ def create_lag_features(data: pd.DataFrame, target_name: str) -> pd.DataFrame:
     try:
         lag_correlations: np.ndarray = pacf(data[target_name].dropna(), nlags=30, method="ywmle")
         max_lag: int = np.where(np.abs(lag_correlations) > 0.16)[0][-1]
-        lags: List[pd.Series] = [
+        lags: list[pd.Series] = [
             data[target_name].dropna().shift(periods=lag) for lag in reversed(range(1, max_lag + 1))
         ]
-        cols: List[str] = [f"lag_{i}" for i in reversed(range(1, max_lag + 1))]
+        cols: list[str] = [f"lag_{i}" for i in reversed(range(1, max_lag + 1))]
         df: pd.DataFrame = pd.concat(lags, axis=1).dropna()
         df.columns = cols
         return df
@@ -54,7 +52,7 @@ def create_window_features(
         pd.DataFrame: Matrix of window features
     """
     try:
-        cols: List[str] = (
+        cols: list[str] = (
             np.array(
                 [
                     [f"mean_window_{window_size}", f"std_window_{window_size}"]
@@ -64,7 +62,7 @@ def create_window_features(
             .ravel()
             .tolist()
         )
-        dfs: List[pd.DataFrame] = [
+        dfs: list[pd.DataFrame] = [
             data[target_name]
             .rolling(window=window_size, min_periods=1)
             .agg(["mean", "std"])
@@ -107,7 +105,7 @@ def create_datetime_features(data: pd.DataFrame) -> pd.DataFrame:
 
 def transform_data(
     stationary_data: pd.DataFrame, target_name: str
-) -> Tuple[pd.DataFrame, pd.Series]:
+) -> tuple[pd.DataFrame, pd.Series]:
     """Transforms a stationary univariate time series to a matrix of lag
     features, window features, datetime features, and a target
 

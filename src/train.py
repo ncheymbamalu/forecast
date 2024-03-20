@@ -4,8 +4,6 @@ Model training, time series cross-validation, and hyperparameter tuning
 
 import random
 
-from typing import Dict, List, Tuple, Union
-
 import pandas as pd
 
 from omegaconf import OmegaConf
@@ -18,7 +16,7 @@ from src.logger import logging
 from src.transform import transform_data
 
 
-def get_informative_features(feature_matrix: pd.DataFrame, target_vector: pd.Series) -> List[str]:
+def get_informative_features(feature_matrix: pd.DataFrame, target_vector: pd.Series) -> list[str]:
     """Extracts the most informative features based on the mutual information criterion
 
     Args:
@@ -31,7 +29,7 @@ def get_informative_features(feature_matrix: pd.DataFrame, target_vector: pd.Ser
         information criterion
     """
     try:
-        mutual_info: Dict[str, float] = {}
+        mutual_info: dict[str, float] = {}
         for col in feature_matrix.columns:
             score: float = mutual_info_regression(feature_matrix[[col]], target_vector)[0]
             mutual_info[col] = score
@@ -46,7 +44,7 @@ def get_informative_features(feature_matrix: pd.DataFrame, target_vector: pd.Ser
 
 def train_model(
     feature_matrix: pd.DataFrame, target_vector: pd.Series, forecast_horizon: int = 24
-) -> Tuple[XGBRegressor, List[str]]:
+) -> tuple[XGBRegressor, list[str]]:
     """Trains, cross-validates, and optimizes hyperparameters for an object
     of type, 'XGBRegressor'
 
@@ -66,16 +64,16 @@ def train_model(
             "Initiating %s and %s...", "time series cross-validation", "hyperparameter tuning"
         )
         config = OmegaConf.load(r"./config.yaml")
-        train_indices: List[int] = [
+        train_indices: list[int] = [
             feature_matrix.shape[0] + (i * forecast_horizon) for i in range(-10, 0)
         ]
-        val_indices: List[int] = [idx + forecast_horizon for idx in train_indices]
-        idx_pairs: List[Tuple[int, int]] = [
+        val_indices: list[int] = [idx + forecast_horizon for idx in train_indices]
+        idx_pairs: list[tuple[int, int]] = [
             idx_pair for idx_pair in zip(train_indices, val_indices) if idx_pair[0] > 0
         ]
         n_folds: int = len(idx_pairs)
         tss: TimeSeriesSplit = TimeSeriesSplit(n_splits=n_folds, test_size=forecast_horizon, gap=0)
-        search_space: Dict[str, List[Union[int, float]]] = {
+        search_space: dict[str, list[int | float]] = {
             "n_estimators": config.train.n_estimators,
             "max_depth": config.train.max_depth,
             "learning_rate": config.train.learning_rate,
@@ -92,7 +90,7 @@ def train_model(
             n_jobs=-1,
             verbose=0,
         )
-        mi_features: List[str] = get_informative_features(feature_matrix, target_vector)
+        mi_features: list[str] = get_informative_features(feature_matrix, target_vector)
         grid_search.fit(feature_matrix[mi_features].values, target_vector.values)
         logging.info("Model training complete.")
         return grid_search.best_estimator_, mi_features

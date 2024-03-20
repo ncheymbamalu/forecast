@@ -2,7 +2,7 @@
 Streamlit Web Application
 """
 
-from typing import Tuple
+# from typing import Tuple
 
 import pandas as pd
 import streamlit as st
@@ -16,7 +16,7 @@ from src.transform import transform_data
 
 
 @st.cache_data
-def generate_forecast(start: str) -> Tuple[int, pd.DataFrame, pd.Series]:
+def generate_forecast(start: str) -> tuple[int, pd.DataFrame, pd.Series]:
     """Returns the forecast horizon, model inputs, and the in-sample data and forecast
 
     Args:

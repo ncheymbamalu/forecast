@@ -5,7 +5,6 @@ Recursive/multi-step forecasting
 import random
 
 from datetime import timedelta
-from typing import List
 
 import numpy as np
 import pandas as pd
@@ -23,7 +22,7 @@ def get_recursive_forecast(
     feature_matrix: pd.DataFrame,
     target_vector: pd.Series,
     model: XGBRegressor,
-    mi_features: List[str],
+    mi_features: list[str],
 ) -> pd.Series:
     """Generates a recursive forecast
 
@@ -44,17 +43,17 @@ def get_recursive_forecast(
         logging.info("Forecasting initiated...")
 
         # extract the 'relevant' lag features and the column index of each
-        lag_cols: List[str] = [col for col in feature_matrix.columns if "lag" in col]
-        rel_lag_cols: List[str] = [col for col in lag_cols if col in mi_features]
-        lag_col_idx: List[int] = [lag_cols.index(col) for col in rel_lag_cols]
+        lag_cols: list[str] = [col for col in feature_matrix.columns if "lag" in col]
+        rel_lag_cols: list[str] = [col for col in lag_cols if col in mi_features]
+        lag_col_idx: list[int] = [lag_cols.index(col) for col in rel_lag_cols]
 
         # extract the 'relevant' window features and the column index of each
-        window_cols: List[str] = [col for col in feature_matrix.columns if "window" in col]
-        rel_window_cols: List[str] = [col for col in window_cols if col in mi_features]
-        window_col_idx: List[int] = [window_cols.index(col) for col in rel_window_cols]
+        window_cols: list[str] = [col for col in feature_matrix.columns if "window" in col]
+        rel_window_cols: list[str] = [col for col in window_cols if col in mi_features]
+        window_col_idx: list[int] = [window_cols.index(col) for col in rel_window_cols]
 
         # extract the 'relevant' datetime features
-        dt_cols: List[str] = [
+        dt_cols: list[str] = [
             col
             for col in feature_matrix.columns
             if (col in mi_features) and (col not in lag_cols + window_cols)
@@ -68,33 +67,33 @@ def get_recursive_forecast(
 
         # create a list of lists, ...
         # where each list is a row of values for the out-of-sample datetime features
-        x_dts: List[List[int]] = create_datetime_features(pd.DataFrame(index=forecast_indices))[
+        x_dts: list[list[int]] = create_datetime_features(pd.DataFrame(index=forecast_indices))[
             dt_cols
         ].values.tolist()
 
         # create a list of window sizes, ...
         # which will be used to compute values for the out-of-sample window features
-        window_sizes: List[int] = sorted(set(int(col.split("_")[-1]) for col in window_cols))
-        dynamic_window: List[float] = target_vector.iloc[-max(window_sizes) :].tolist()
+        window_sizes: list[int] = sorted(set(int(col.split("_")[-1]) for col in window_cols))
+        dynamic_window: list[float] = target_vector.iloc[-max(window_sizes) :].tolist()
 
         # fit the model
         model.fit(feature_matrix[mi_features].values, target_vector.values)
 
         # create the 1st input
-        x_dt: List[int] = x_dts[0]
-        x_window: List[List[float]] = [
+        x_dt: list[int] = x_dts[0]
+        x_window: list[list[float]] = [
             [np.mean(dynamic_window[-window_size:]), np.std(dynamic_window[-window_size:])]
             for window_size in window_sizes
         ]
-        x_rel_window: List[float] = np.array(x_window).ravel()[window_col_idx].tolist()
-        x_lag: List[float] = feature_matrix.iloc[-1][lag_cols].values.tolist()
+        x_rel_window: list[float] = np.array(x_window).ravel()[window_col_idx].tolist()
+        x_lag: list[float] = feature_matrix.iloc[-1][lag_cols].values.tolist()
         x_lag = x_lag[1:] + [target_vector.iloc[-1]]
-        x_rel_lag: List[float] = np.array(x_lag)[lag_col_idx].tolist()
+        x_rel_lag: list[float] = np.array(x_lag)[lag_col_idx].tolist()
         x: np.ndarray = np.array(x_dt + x_rel_window + x_rel_lag)
 
         # get the 1st prediction and add it to a list named, 'forecast'
         yhat: float = model.predict(x.reshape(1, -1))[0]
-        forecast: List[float] = [yhat]
+        forecast: list[float] | np.ndarray = [yhat]
 
         for x_dt in x_dts[1:]:
 
@@ -115,7 +114,7 @@ def get_recursive_forecast(
 
         # update the forecast if the target is a once-differenced time series
         original_target: str = stationary_data.columns[0]
-        forecast: np.ndarray = (
+        forecast = (
             stationary_data.loc[feature_matrix.index[-1], original_target] + np.cumsum(forecast)
             if target_vector.name == "diff"
             else np.array(forecast)

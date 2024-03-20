@@ -5,7 +5,6 @@ Data ingestion and pre-processing
 import random
 
 from datetime import timedelta
-from typing import List, Tuple
 
 import pandas as pd
 
@@ -15,7 +14,7 @@ from statsmodels.tsa.stattools import adfuller
 from src.logger import logging
 
 
-def get_timestamps() -> List[str]:
+def get_timestamps() -> list[str]:
     """Creates a list of string-formatted timestamps
 
     Returns:
@@ -68,7 +67,7 @@ def preprocess_data(start: str) -> pd.DataFrame:
 
 def ensure_stationarity(
     data: pd.DataFrame, target_name: str = "energy_consumption_mw"
-) -> Tuple[pd.DataFrame, str]:
+) -> tuple[pd.DataFrame, str]:
     """Returns a DataFrame that contains a stationary univariate time series
 
     Args:
