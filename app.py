@@ -2,13 +2,12 @@
 Streamlit Web Application
 """
 
-# from typing import Tuple
-
 import pandas as pd
 import streamlit as st
 
 from plotly import graph_objs as go
 
+from src.evaluate import evaluate_forecast
 from src.forecast import get_recursive_forecast
 from src.ingest import ensure_stationarity, get_timestamps, preprocess_data
 from src.train import train_model
@@ -23,7 +22,7 @@ def generate_forecast(start: str) -> tuple[int, pd.DataFrame, pd.Series]:
         start (str): Initial timestamp of the time series
 
     Returns:
-        Tuple[int, pd.DataFrame, pd.Series]: Forecast horizon (int), input features
+        tuple[int, pd.DataFrame, pd.Series]: Forecast horizon (int), input features
         and the target (pd.DataFrame), in-sample data and forecast (pd.Series)
     """
     try:
@@ -31,6 +30,7 @@ def generate_forecast(start: str) -> tuple[int, pd.DataFrame, pd.Series]:
         x_matrix, y_vector = transform_data(df, target)
         model, features = train_model(x_matrix, y_vector)
         forecast: pd.Series = get_recursive_forecast(df, x_matrix, y_vector, model, features)
+        evaluate_forecast(forecast)
         return (
             forecast.shape[0],
             pd.concat((x_matrix[features], y_vector), axis=1),

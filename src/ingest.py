@@ -18,7 +18,7 @@ def get_timestamps() -> list[str]:
     """Creates a list of string-formatted timestamps
 
     Returns:
-        List[str]: String-formatted timestamps
+        list[str]: String-formatted timestamps
     """
     try:
         config = OmegaConf.load(r"./config.yaml")
@@ -75,7 +75,7 @@ def ensure_stationarity(
         target_name (str): Column name of the univariate time series
 
     Returns:
-        Tuple[pd.DataFrame, str]: DataFrame that contains a stationary univariate
+        tuple[pd.DataFrame, str]: DataFrame that contains a stationary univariate
         time series and its column name
     """
     try:

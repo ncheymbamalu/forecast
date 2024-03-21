@@ -33,7 +33,7 @@ def get_recursive_forecast(
         datetime features
         target_vector (pd.Series): Post-transformation stationary univariate time series
         model (XGBRegressor): Object of type, 'XGBRegressor'
-        mi_features (List[str]): List containing the most informative features based
+        mi_features (list[str]): List containing the most informative features based
         on the mutual information criterion
 
     Returns:

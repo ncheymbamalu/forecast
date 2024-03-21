@@ -106,8 +106,8 @@ def create_datetime_features(data: pd.DataFrame) -> pd.DataFrame:
 def transform_data(
     stationary_data: pd.DataFrame, target_name: str
 ) -> tuple[pd.DataFrame, pd.Series]:
-    """Transforms a stationary univariate time series to a matrix of lag
-    features, window features, datetime features, and a target
+    """Transforms a stationary univariate time series into a matrix of lag features, window
+    features, datetime features, and a target
 
     Args:
         stationary_data (pd.DataFrame): DataFrame that contains a stationary
@@ -115,7 +115,7 @@ def transform_data(
         target_name (str): Column name of the stationary univariate time series
 
     Returns:
-        Tuple[pd.DataFrame, pd.Series]: Feature matrix and target vector
+        tuple[pd.DataFrame, pd.Series]: Feature matrix and target vector
     """
     try:
         logging.info("Transforming the data...")

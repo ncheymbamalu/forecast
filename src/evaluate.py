@@ -14,8 +14,8 @@ def get_rsquared(y: pd.Series | np.ndarray, y_hat: pd.Series | np.ndarray) -> fl
     """Computes the R² between y and y_hat
 
     Args:
-        y (Union[np.ndarray, pd.Series]): Target vector
-        yhat (Union[np.ndarray, pd.Series]): Prediction vector
+        y (pd.Series | np.ndarray): _description_
+        y_hat (pd.Series | np.ndarray): _description_
 
     Returns:
         float: R²

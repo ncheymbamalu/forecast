@@ -25,8 +25,7 @@ def get_informative_features(feature_matrix: pd.DataFrame, target_vector: pd.Ser
         target_vector (pd.Series): Stationary univariate time series
 
     Returns:
-        List[str]: List containing the most informative features based on the mutual
-        information criterion
+        list[str]: Most informative features based on the mutual information criterion
     """
     try:
         mutual_info: dict[str, float] = {}
@@ -45,8 +44,7 @@ def get_informative_features(feature_matrix: pd.DataFrame, target_vector: pd.Ser
 def train_model(
     feature_matrix: pd.DataFrame, target_vector: pd.Series, forecast_horizon: int = 24
 ) -> tuple[XGBRegressor, list[str]]:
-    """Trains, cross-validates, and optimizes hyperparameters for an object
-    of type, 'XGBRegressor'
+    """Trains, cross-validates, and optimizes hyperparameters for an object of type, 'XGBRegressor'
 
     Args:
         feature_matrix (pd.DataFrame): Matrix of lag features, window features,
@@ -56,7 +54,7 @@ def train_model(
         the future. Defaults to 24.
 
     Returns:
-        Tuple[XGBRegressor, List[str]]: Trained and cross-validated model and a list
+        tuple[XGBRegressor, list[str]]: Trained and cross-validated model and a list
         containing the most informative features
     """
     try:
