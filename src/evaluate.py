@@ -14,11 +14,11 @@ def get_rsquared(y: pd.Series | np.ndarray, y_hat: pd.Series | np.ndarray) -> fl
     """Computes the R² between y and y_hat
 
     Args:
-        y (pd.Series | np.ndarray): _description_
-        y_hat (pd.Series | np.ndarray): _description_
+        y (pd.Series | np.ndarray): Observations
+        y_hat (pd.Series | np.ndarray): Predictions
 
     Returns:
-        float: R²
+        float: R² between y and y_hat
     """
     try:
         y = y.ravel() if y.ndim > 1 else y
