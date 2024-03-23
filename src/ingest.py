@@ -24,7 +24,7 @@ def get_timestamps() -> list[str]:
         config = OmegaConf.load(r"./config.yaml")
         data: pd.DataFrame = pd.read_csv(config.ingest.raw_data_path)
         min_timestamp: str = str(pd.to_datetime(data.Datetime).min())
-        max_timestamp: str = str(pd.to_datetime(data.Datetime).max() - timedelta(days=8))
+        max_timestamp: str = str(pd.to_datetime(data.Datetime).max() - timedelta(days=11))
         return [str(ts) for ts in pd.date_range(min_timestamp, max_timestamp, freq="H")]
     except Exception as e:
         raise e
@@ -42,7 +42,7 @@ def preprocess_data(start: str) -> pd.DataFrame:
     try:
         logging.info("Fetching the raw data...")
         config = OmegaConf.load(r"./config.yaml")
-        end: str = str(pd.to_datetime(start) + timedelta(days=7))
+        end: str = str(pd.to_datetime(start) + timedelta(days=10))
         raw_data: pd.DataFrame = pd.read_csv(
             config.ingest.raw_data_path, index_col="Datetime", parse_dates=True
         )
