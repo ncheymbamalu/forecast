@@ -17,6 +17,7 @@ from src.train import train_model
 from src.transform import create_datetime_features, transform_data
 
 
+# pylint: disable=too-many-locals
 def get_recursive_forecast(
     stationary_data: pd.DataFrame,
     feature_matrix: pd.DataFrame,
