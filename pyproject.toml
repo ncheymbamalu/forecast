@@ -25,7 +25,7 @@ xgboost = "2.0.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "24.1.1"
-flake8 = "7.0.0"
+Flake8-pyproject = "1.2.3"
 isort = "5.13.2"
 mypy = "1.8.0"
 pylint = "3.0.3"
@@ -33,6 +33,13 @@ pytest = "7.4.4"
 
 [tool.black]
 line-length = 100
+
+[tool.flake8]
+max-line-length = 100
+import-order-style = ["pep8"]
+application_import_names = ["src"]
+exclude = [".git", "__pycache__"]
+extend-ignore = ["E501", "W503", "W504", "E203", "I201", "I202"]
 
 [tool.isort]
 profile = "black"
