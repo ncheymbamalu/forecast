@@ -71,6 +71,9 @@ check_untyped_defs = true
 strict_optional = true
 verbosity = 0
 
+[tool.pylint.'MESSAGES CONTROL']
+extension-pkg-whitelist = "pydantic"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
