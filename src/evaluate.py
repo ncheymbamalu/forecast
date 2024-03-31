@@ -5,9 +5,11 @@ Forecast evaluation
 import numpy as np
 import pandas as pd
 
-from omegaconf import OmegaConf
+from omegaconf import DictConfig, ListConfig, OmegaConf
 
 from src.logger import logging
+
+CONFIG: DictConfig | ListConfig = OmegaConf.load(r"./config.yaml")
 
 
 def get_rsquared(y: pd.Series | np.ndarray, y_hat: pd.Series | np.ndarray) -> float:
@@ -39,9 +41,8 @@ def evaluate_forecast(forecast: pd.Series) -> None:
         forecast (pd.Series): Forecasted time series
     """
     try:
-        config = OmegaConf.load(r"./config.yaml")
         target: pd.Series = pd.read_csv(
-            config.ingest.raw_data_path, parse_dates=["Datetime"], index_col="Datetime"
+            CONFIG.ingest.raw_data_path, parse_dates=["Datetime"], index_col="Datetime"
         ).loc[forecast.index, "PJME_MW"]
         metric: float = get_rsquared(target, forecast)
         logging.info("An R² of %s was produced.", round(metric, 2))

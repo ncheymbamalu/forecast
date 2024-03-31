@@ -2,9 +2,9 @@
 .*env
 
 !README.md
-!app.py
+!pyproject.toml
+!poetry.lock
 !config.yaml
 !data
-!poetry.lock
-!pyproject.toml
 !src
+!app.py

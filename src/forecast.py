@@ -9,7 +9,7 @@ from datetime import timedelta
 import numpy as np
 import pandas as pd
 
-from xgboost import XGBRegressor
+from catboost import CatBoostRegressor
 
 from src.ingest import ensure_stationarity, get_timestamps, preprocess_data
 from src.logger import logging
@@ -22,7 +22,7 @@ def get_recursive_forecast(
     stationary_data: pd.DataFrame,
     feature_matrix: pd.DataFrame,
     target_vector: pd.Series,
-    model: XGBRegressor,
+    model: CatBoostRegressor,
     mi_features: list[str],
 ) -> pd.Series:
     """Generates a recursive forecast
@@ -33,7 +33,7 @@ def get_recursive_forecast(
         feature_matrix (pd.DataFrame): Matrix of lag features, window features, and
         datetime features
         target_vector (pd.Series): Post-transformation stationary univariate time series
-        model (XGBRegressor): Object of type, 'XGBRegressor'
+        model (CatBoostRegressor): Object of type, 'CatBoostRegressor'
         mi_features (list[str]): List containing the most informative features based
         on the mutual information criterion
 
@@ -74,7 +74,9 @@ def get_recursive_forecast(
 
         # create a list of window sizes, ...
         # which will be used to compute values for the out-of-sample window features
-        window_sizes: list[int] = sorted(set(int(col.split("_")[-1]) for col in window_cols))
+        window_sizes: list[int] = sorted(
+            set(int(col.split("_")[-1]) for col in window_cols), reverse=True
+        )
         dynamic_window: list[float] = target_vector.iloc[-max(window_sizes) :].tolist()
 
         # fit the model
@@ -83,7 +85,13 @@ def get_recursive_forecast(
         # create the 1st input
         x_dt: list[int] = x_dts[0]
         x_window: list[list[float]] = [
-            [np.mean(dynamic_window[-window_size:]), np.std(dynamic_window[-window_size:])]
+            [
+                np.min(dynamic_window[-window_size:]),
+                np.mean(dynamic_window[-window_size:]),
+                np.max(dynamic_window[-window_size:]),
+                np.std(dynamic_window[-window_size:]),
+                np.sum(dynamic_window[-window_size:]),
+            ]
             for window_size in window_sizes
         ]
         x_rel_window: list[float] = np.array(x_window).ravel()[window_col_idx].tolist()
@@ -92,16 +100,22 @@ def get_recursive_forecast(
         x_rel_lag: list[float] = np.array(x_lag)[lag_col_idx].tolist()
         x: np.ndarray = np.array(x_dt + x_rel_window + x_rel_lag)
 
-        # get the 1st prediction and add it to a list named, 'forecast'
+        # get the 1st prediction and add it to a list named, 'predictions'
         yhat: float = model.predict(x.reshape(1, -1))[0]
-        forecast: list[float] | np.ndarray = [yhat]
+        predictions: list[float] = [yhat]
 
         for x_dt in x_dts[1:]:
 
             # update the input
             dynamic_window = dynamic_window[1:] + [yhat]
             x_window = [
-                [np.mean(dynamic_window[-window_size:]), np.std(dynamic_window[-window_size:])]
+                [
+                    np.min(dynamic_window[-window_size:]),
+                    np.mean(dynamic_window[-window_size:]),
+                    np.max(dynamic_window[-window_size:]),
+                    np.std(dynamic_window[-window_size:]),
+                    np.sum(dynamic_window[-window_size:]),
+                ]
                 for window_size in window_sizes
             ]
             x_rel_window = np.array(x_window).ravel()[window_col_idx].tolist()
@@ -109,16 +123,16 @@ def get_recursive_forecast(
             x_rel_lag = np.array(x_lag)[lag_col_idx].tolist()
             x = np.array(x_dt + x_rel_window + x_rel_lag)
 
-            # get the prediction and append it to the 'forecast' list
+            # get the prediction and append it to the 'predictions' list
             yhat = model.predict(x.reshape(1, -1))[0]
-            forecast.append(yhat)
+            predictions.append(yhat)
 
-        # update the forecast if the target is a once-differenced time series
+        # get the recursive forecast
         original_target: str = stationary_data.columns[0]
-        forecast = (
-            stationary_data.loc[feature_matrix.index[-1], original_target] + np.cumsum(forecast)
+        forecast: np.ndarray = (
+            stationary_data.loc[feature_matrix.index[-1], original_target] + np.cumsum(predictions)
             if target_vector.name == "diff"
-            else np.array(forecast)
+            else np.array(predictions)
         )
         logging.info("The forecast has been generated!")
         return pd.Series(forecast, index=forecast_indices, name="recursive_forecast")

@@ -13,6 +13,26 @@ from src.ingest import ensure_stationarity, get_timestamps, preprocess_data
 from src.logger import logging
 
 
+def get_max_lag(data: pd.DataFrame, target_name: str) -> int:
+    """Returns the maximum number of lags to consider for creating
+    lag features and window features
+
+    Args:
+        data (pd.DataFrame): DataFrame that contains a univariate time series
+        target_name (str): Column name of the univariate time series
+
+    Returns:
+        int: Maximum number of lags to consider for creating lag features
+        and window features
+    """
+    try:
+        lag_correlations: np.ndarray = pacf(data[target_name].dropna(), nlags=30, method="ywmle")
+        max_lag: int = np.where(np.abs(lag_correlations) > 0.16)[0][-1]
+        return max_lag
+    except Exception as e:
+        raise e
+
+
 def create_lag_features(data: pd.DataFrame, target_name: str) -> pd.DataFrame:
     """Creates a matrix of lag features from a univariate time series
 
@@ -24,8 +44,7 @@ def create_lag_features(data: pd.DataFrame, target_name: str) -> pd.DataFrame:
         pd.DataFrame: Matrix of lag features
     """
     try:
-        lag_correlations: np.ndarray = pacf(data[target_name].dropna(), nlags=30, method="ywmle")
-        max_lag: int = np.where(np.abs(lag_correlations) > 0.16)[0][-1]
+        max_lag: int = get_max_lag(data, target_name)
         lags: list[pd.Series] = [
             data[target_name].dropna().shift(periods=lag) for lag in reversed(range(1, max_lag + 1))
         ]
@@ -37,41 +56,31 @@ def create_lag_features(data: pd.DataFrame, target_name: str) -> pd.DataFrame:
         raise e
 
 
-def create_window_features(
-    data: pd.DataFrame, target_name: str, max_window_size: int = 24
-) -> pd.DataFrame:
+def create_window_features(data: pd.DataFrame, target_name: str) -> pd.DataFrame:
     """Creates a matrix of window features from a univariate time series
 
     Args:
         data (pd.DataFrame): DataFrame that contains a univariate time series
         target_name (str): Column name of the univariate time series
-        max_window_size (int, optional): Maximum number of lags to use to create
-        window features. Defaults to 24.
+        n_days: Maximum number of days to use to create window features. Defaults to 7.
 
     Returns:
         pd.DataFrame: Matrix of window features
     """
     try:
-        cols: list[str] = (
-            np.array(
-                [
-                    [f"mean_window_{window_size}", f"std_window_{window_size}"]
-                    for window_size in reversed(range(4, max_window_size + 1, 4))
-                ]
-            )
-            .ravel()
-            .tolist()
-        )
+        n_days: int = round(len(set(data.index.date)) / 2)
+        max_window_size: int = n_days * get_max_lag(data, target_name)
         dfs: list[pd.DataFrame] = [
-            data[target_name]
-            .rolling(window=window_size, min_periods=1)
-            .agg(["mean", "std"])
-            .shift(periods=1)
-            for window_size in reversed(range(4, max_window_size + 1, 4))
+            (
+                data[target_name]
+                .rolling(window=window_size, min_periods=1)
+                .agg(["min", "mean", "max", "std", "sum"])
+                .shift(periods=1)
+                .add_suffix(f"_window_{window_size}")
+            )
+            for window_size in reversed(range(12, max_window_size + 1, 12))
         ]
-        df: pd.DataFrame = pd.concat(dfs, axis=1).dropna()
-        df.columns = cols
-        return df
+        return pd.concat(dfs, axis=1).dropna()
     except Exception as e:
         raise e
 
@@ -106,8 +115,8 @@ def create_datetime_features(data: pd.DataFrame) -> pd.DataFrame:
 def transform_data(
     stationary_data: pd.DataFrame, target_name: str
 ) -> tuple[pd.DataFrame, pd.Series]:
-    """Transforms a stationary univariate time series into a matrix of lag features, window
-    features, datetime features, and a target
+    """Transforms a stationary univariate time series into a matrix of
+    lag features, window features, datetime features, and a target
 
     Args:
         stationary_data (pd.DataFrame): DataFrame that contains a stationary

@@ -165,6 +165,52 @@ files = [
 ]
 
 [[package]]
+name = "catboost"
+version = "1.2.3"
+description = "CatBoost Python Package"
+optional = false
+python-versions = "*"
+files = [
+    {file = "catboost-1.2.3-cp310-cp310-macosx_11_0_universal2.whl", hash = "sha256:16dccd0922e4046aa36db6fb5f48503104f5b3c9c7bd256194dbf02ee1fabbf5"},
+    {file = "catboost-1.2.3-cp310-cp310-manylinux2014_aarch64.whl", hash = "sha256:cdb78481880b1c07f003c00c2e0b817f7a312ab0e93da5520f8a09efb82adc75"},
+    {file = "catboost-1.2.3-cp310-cp310-manylinux2014_x86_64.whl", hash = "sha256:647dd55dbf2808dcdd425131e4e279be0330fc6e442c196245d61bf44d742c54"},
+    {file = "catboost-1.2.3-cp310-cp310-win_amd64.whl", hash = "sha256:8365cb534da48f2dba12373a7e33aca6f9054b8214714d98175d1d6a8e8a221b"},
+    {file = "catboost-1.2.3-cp311-cp311-macosx_11_0_universal2.whl", hash = "sha256:649d19924db984930cd500faf862fd5b76698d9faa6e2350338d44d17261d783"},
+    {file = "catboost-1.2.3-cp311-cp311-manylinux2014_aarch64.whl", hash = "sha256:545e981506b02e6c716324089fc5201b57e5e30fb61929b0ac0b61af8290a9b1"},
+    {file = "catboost-1.2.3-cp311-cp311-manylinux2014_x86_64.whl", hash = "sha256:f8ad8cacf688f75a78324655a69a942309345960af2075b4618a4b723c95ba81"},
+    {file = "catboost-1.2.3-cp311-cp311-win_amd64.whl", hash = "sha256:d9cea396190d4b6072c0e9dced69a0a4b46accda5572b26962b3b29b6d1e9233"},
+    {file = "catboost-1.2.3-cp312-cp312-macosx_11_0_universal2.whl", hash = "sha256:7ea701141d12bb2e9ec348b4bb02be6b3188b6cd8832ae7b56a9bf98677a9128"},
+    {file = "catboost-1.2.3-cp312-cp312-manylinux2014_aarch64.whl", hash = "sha256:ec28140b7ad8663a68c05968c729263a7e8e604858a61fb6d9a190a9db025b26"},
+    {file = "catboost-1.2.3-cp312-cp312-manylinux2014_x86_64.whl", hash = "sha256:c73a85711260c48c881eff41f6183426eeee7f2e07118688ecafc8c32ab57eb3"},
+    {file = "catboost-1.2.3-cp312-cp312-win_amd64.whl", hash = "sha256:031c4a4e7160b6a965414dd60c9459fb8472c69a8156e80e16734dd0b068986e"},
+    {file = "catboost-1.2.3-cp37-cp37m-macosx_11_0_universal2.whl", hash = "sha256:b7c95c6ab5edccde2b847bac1dc990f9d26c79353ed52de348d3e228685f815e"},
+    {file = "catboost-1.2.3-cp37-cp37m-manylinux2014_aarch64.whl", hash = "sha256:69f24ed30a06c4a6d0f43203876edff3a09fe0487c201cfaace7338a286764a7"},
+    {file = "catboost-1.2.3-cp37-cp37m-manylinux2014_x86_64.whl", hash = "sha256:2b8a5ad81b6f4ae79067459a20b192a69066a5a1300d20e05b10f3af1092ab37"},
+    {file = "catboost-1.2.3-cp37-cp37m-win_amd64.whl", hash = "sha256:ea79008ad793a5090497020ed4afdbbc3cac71035483124aa43ca118cece659f"},
+    {file = "catboost-1.2.3-cp38-cp38-macosx_11_0_universal2.whl", hash = "sha256:5cb6be26e5c60b394482181f8e1392ae60d9583d0482f76a8c0cb75effc6da36"},
+    {file = "catboost-1.2.3-cp38-cp38-manylinux2014_aarch64.whl", hash = "sha256:fff6cc83401a60666ba14507402e1d633e94531a520abc479b7d8a98470b9db4"},
+    {file = "catboost-1.2.3-cp38-cp38-manylinux2014_x86_64.whl", hash = "sha256:e19ef50596486790e8fa49a927b0bce1a340a63c3ee897db0ce720bdb04500a3"},
+    {file = "catboost-1.2.3-cp38-cp38-win_amd64.whl", hash = "sha256:b0ac53dce6b9598bb0ec7144da360d455166e26859c50657cca79a4d19f04bc9"},
+    {file = "catboost-1.2.3-cp39-cp39-macosx_11_0_universal2.whl", hash = "sha256:37557e90e9c4185f41faff3c53e1bde52d926dea2feff6eda3d48d7c240ed726"},
+    {file = "catboost-1.2.3-cp39-cp39-manylinux2014_aarch64.whl", hash = "sha256:9a8eb86e5c4ed7d8f5f14c47965b3d5b1918c926280e71e024d03c7652e2a279"},
+    {file = "catboost-1.2.3-cp39-cp39-manylinux2014_x86_64.whl", hash = "sha256:a867deb1d0ff1a54feef91ab86bdb90f589dce1a7ba0da9ab1faf90eb72bde14"},
+    {file = "catboost-1.2.3-cp39-cp39-win_amd64.whl", hash = "sha256:78316a492d75089f77ea508ed009e54efe724120f549d6a2c782b8a4ccbf1256"},
+    {file = "catboost-1.2.3.tar.gz", hash = "sha256:72e141e3594975a7c08c787989b9b35d45b2beec13e37a62706a01b1037a1e44"},
+]
+
+[package.dependencies]
+graphviz = "*"
+matplotlib = "*"
+numpy = ">=1.16.0"
+pandas = ">=0.24"
+plotly = "*"
+scipy = "*"
+six = "*"
+
+[package.extras]
+widget = ["ipython", "ipywidgets (>=7.0,<9.0)", "traitlets"]
+
+[[package]]
 name = "certifi"
 version = "2024.2.2"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -673,6 +719,22 @@ gitdb = ">=4.0.1,<5"
 test = ["black", "coverage[toml]", "ddt (>=1.1.1,!=1.4.3)", "mock", "mypy", "pre-commit", "pytest (>=7.3.1)", "pytest-cov", "pytest-instafail", "pytest-mock", "pytest-sugar"]
 
 [[package]]
+name = "graphviz"
+version = "0.20.3"
+description = "Simple Python interface for Graphviz"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "graphviz-0.20.3-py3-none-any.whl", hash = "sha256:81f848f2904515d8cd359cc611faba817598d2feaac4027b266aa3eda7b3dde5"},
+    {file = "graphviz-0.20.3.zip", hash = "sha256:09d6bc81e6a9fa392e7ba52135a9d49f1ed62526f96499325930e87ca1b5925d"},
+]
+
+[package.extras]
+dev = ["flake8", "pep8-naming", "tox (>=3)", "twine", "wheel"]
+docs = ["sphinx (>=5,<7)", "sphinx-autodoc-typehints", "sphinx-rtd-theme"]
+test = ["coverage", "pytest (>=7,<8.1)", "pytest-cov", "pytest-mock (>=3)"]
+
+[[package]]
 name = "idna"
 version = "3.6"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -715,13 +777,13 @@ files = [
 
 [[package]]
 name = "ipykernel"
-version = "6.29.3"
+version = "6.29.4"
 description = "IPython Kernel for Jupyter"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "ipykernel-6.29.3-py3-none-any.whl", hash = "sha256:5aa086a4175b0229d4eca211e181fb473ea78ffd9869af36ba7694c947302a21"},
-    {file = "ipykernel-6.29.3.tar.gz", hash = "sha256:e14c250d1f9ea3989490225cc1a542781b095a18a19447fcf2b5eaf7d0ac5bd2"},
+    {file = "ipykernel-6.29.4-py3-none-any.whl", hash = "sha256:1181e653d95c6808039c509ef8e67c4126b3b3af7781496c7cbfb5ed938a27da"},
+    {file = "ipykernel-6.29.4.tar.gz", hash = "sha256:3d44070060f9475ac2092b760123fadf105d2e2493c24848b6691a7c4f42af5c"},
 ]
 
 [package.dependencies]
@@ -2673,13 +2735,13 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "validators"
-version = "0.23.2"
+version = "0.24.0"
 description = "Python Data Validation for Humans™"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "validators-0.23.2-py3-none-any.whl", hash = "sha256:cb68e489f946f4934dbd3c203f08486c53493ab1c204f39d13b13c209f60e2c1"},
-    {file = "validators-0.23.2.tar.gz", hash = "sha256:397ec4a1e86192e6e904b5afe8c12da0e6eaa3db088c0cc426e00cfee2ef07a8"},
+    {file = "validators-0.24.0-py3-none-any.whl", hash = "sha256:4a99eb368747e60900bae947418eb21e230ff4ff5e7b7944b9308c456d86da32"},
+    {file = "validators-0.24.0.tar.gz", hash = "sha256:cd23defb36de42d14e7559cf0757f761bb46b10d9de2998e6ef805f769d859e3"},
 ]
 
 [[package]]
@@ -2779,4 +2841,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "36205fd21849e4a5ecc5a69373095cf489fc843dc8d00dc620c116ba6ae78bfb"
+content-hash = "e723c2020b13406c8ef1dd990567f03d94b6932fa0f384cf276c4f6d6a8ef974"

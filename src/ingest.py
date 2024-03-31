@@ -8,10 +8,12 @@ from datetime import timedelta
 
 import pandas as pd
 
-from omegaconf import OmegaConf
+from omegaconf import DictConfig, ListConfig, OmegaConf
 from statsmodels.tsa.stattools import adfuller
 
 from src.logger import logging
+
+CONFIG: DictConfig | ListConfig = OmegaConf.load(r"./config.yaml")
 
 
 def get_timestamps() -> list[str]:
@@ -21,8 +23,7 @@ def get_timestamps() -> list[str]:
         list[str]: String-formatted timestamps
     """
     try:
-        config = OmegaConf.load(r"./config.yaml")
-        data: pd.DataFrame = pd.read_csv(config.ingest.raw_data_path)
+        data: pd.DataFrame = pd.read_csv(CONFIG.ingest.raw_data_path)
         min_timestamp: str = str(pd.to_datetime(data.Datetime).min())
         max_timestamp: str = str(pd.to_datetime(data.Datetime).max() - timedelta(days=11))
         return [str(ts) for ts in pd.date_range(min_timestamp, max_timestamp, freq="H")]
@@ -41,10 +42,9 @@ def preprocess_data(start: str) -> pd.DataFrame:
     """
     try:
         logging.info("Fetching the raw data...")
-        config = OmegaConf.load(r"./config.yaml")
         end: str = str(pd.to_datetime(start) + timedelta(days=10))
         raw_data: pd.DataFrame = pd.read_csv(
-            config.ingest.raw_data_path, index_col="Datetime", parse_dates=True
+            CONFIG.ingest.raw_data_path, index_col="Datetime", parse_dates=True
         )
         processed_data: pd.DataFrame = (
             raw_data.loc[
@@ -69,6 +69,7 @@ def ensure_stationarity(
     data: pd.DataFrame, target_name: str = "energy_consumption_mw"
 ) -> tuple[pd.DataFrame, str]:
     """Returns a DataFrame that contains a stationary univariate time series
+    and its column name
 
     Args:
         data (pd.DataFrame): DataFrame that contains a univariate time series

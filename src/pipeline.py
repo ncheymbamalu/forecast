@@ -24,7 +24,7 @@ class ForecastingPipeline(BaseModel):
 
     start: str
 
-    def forecast(self) -> pd.Series:
+    def run(self) -> pd.Series:
         """
         Generates a recursive forecast
         """
@@ -44,5 +44,5 @@ class ForecastingPipeline(BaseModel):
 if __name__ == "__main__":
     initial_timestamp: str = random.choice(get_timestamps())
     fp: ForecastingPipeline = ForecastingPipeline(start=initial_timestamp)
-    forecast: pd.Series = fp.forecast()
+    forecast: pd.Series = fp.run()
     print(forecast)
